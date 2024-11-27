@@ -9,10 +9,15 @@
 #define buzzerPin 4
 
 void setup() {
+  // set baud rate to match arduino for debugging
   Serial.begin(9600);
+  // define pins as inputs or outputs
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
+  // initialise variables
+  int distThreshold = 200; //distance in cm for buzzer to trigger
+  int buzzerFreq = 1500 //frequency in Hertz at which buzzer sounds
 }
 
 void loop() {
@@ -32,5 +37,11 @@ void loop() {
   Serial.print("Distance in cm: ");
   Serial.println(distance);
 
-  delay(500);
+  // buzzer test - triggers buzzer if distance is over 2 metres
+  if (distance > distThreshold){
+    tone(buzzerPin, buzzerFreq);
+  } else {
+    noTone(buzzerPin); //turn off buzzer when distance falls back below distThreshold 
+  }
+  delay(500); //wait every 500milliseconds for update
 }
