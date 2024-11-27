@@ -6,11 +6,13 @@
 
 #define trigPin 2
 #define echoPin 3
+#define buzzerPin 4
 
 void setup() {
   Serial.begin(9600);
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
 }
 
 void loop() {
@@ -30,5 +32,5 @@ void loop() {
   Serial.print("Distance in cm: ");
   Serial.println(distance);
 
-  delay(2000);
+  delay(500);
 }
