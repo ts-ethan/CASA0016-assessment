@@ -12,6 +12,7 @@
 // initialise variables to global scope
 int distThreshold = 200; //distance in cm for buzzer to trigger
 int buzzerFreq = 1500; //frequency in Hertz at which buzzer sounds
+int delayTime = 1000;
 
 void setup() {
   // set baud rate to match arduino for debugging
@@ -20,18 +21,18 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
-  // declare initial rangefinder value
-  // int initDist = distance; //this detects current capacity of biscuits to compare with in loop
 }
 
+// read distance once, to set initial rangefinder value
+int initDist = readDistance(); //this detects current capacity of biscuits, to compare within loop() below
 
 void loop() {
   int distance = readDistance();
   
   Serial.print("Distance in cm: ");
   Serial.println(distance);
-  // Serial.print("The initialised distance is: ");
-  // Serial.println(initDist);
+  Serial.print("The initialised distance is: ");
+  Serial.println(initDist);
 
 
   // buzzer test - triggers buzzer if distance is over 2 metres
@@ -40,7 +41,7 @@ void loop() {
   } else {
     noTone(buzzerPin); //turn off buzzer when distance falls back below distThreshold 
   }
-  delay(1000); //wait every 500milliseconds for update
+  delay(delayTime); //wait for the delay time, in milliseconds, for update
 }
 
 int readDistance(){
