@@ -10,9 +10,9 @@
 #define buzzerPin 4 //pin 4 mapped to buzzer (voltage input)
 
 // initialise variables to global scope
-int distThreshold = 200; //distance in cm for buzzer to trigger
-int buzzerFreq = 1500; //frequency in Hertz at which buzzer sounds
-int delayTime = 1000;
+int buzzerFreq = 1500; //frequency in Hertz at which buzzer sounds. chosen based on amplitude, according to buzzer documentation
+int delayTime = 1000; //time in milliseconds for arduino to delay until loop() restarts
+int maxDist = 20; //the approximate length of the biscuit tube. used to determine "open" or "closed" state of lid.
 
 void setup() {
   // set baud rate to match arduino for debugging
@@ -23,28 +23,30 @@ void setup() {
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
 }
 
-// read distance once, to set initial rangefinder value
-int initDist = readDistance(); //this detects current capacity of biscuits, to compare within loop() below
+// read currentDist once, to set initial rangefinder value
+int initDist = readcurrentDist(); //this detects current capacity of biscuits, to compare within loop() below
 
 void loop() {
-  int distance = readDistance();
-  
+  //scan for current distance to object
+  int currentDist = readcurrentDist();
+  //print readings to console for debugging
   Serial.print("Distance in cm: ");
-  Serial.println(distance);
+  Serial.println(currentDist);
   Serial.print("The initialised distance is: ");
   Serial.println(initDist);
 
-
-  // buzzer test - triggers buzzer if distance is over 2 metres
-  if (distance > distThreshold){
+  // buzzer test: triggers buzzer if the following conditions are met: 
+  if (lidOpen(currentDist) == true){
+    noTone(buzzerPin);
+  } else if (currentDist != initDist){
     tone(buzzerPin, buzzerFreq);
   } else {
-    noTone(buzzerPin); //turn off buzzer when distance falls back below distThreshold 
+    noTone(buzzerPin);
   }
   delay(delayTime); //wait for the delay time, in milliseconds, for update
 }
 
-int readDistance(){
+int readcurrentDist(){ //reads the current distance between rangefinder and closest object when called
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -56,5 +58,13 @@ int readDistance(){
 
   // Reads the echoPin, returns the sound wave travel time in microseconds
   long duration = pulseIn(echoPin, HIGH); 
-  return 34400*duration/2000000; // returns the distance to object in centimeters
+  return 34400*duration/2000000; // returns the currentDist to object in centimeters
+}
+
+bool lidOpen(int a){ //checks if lid is open or not, by comparing parameter with maxDist
+  if (a > maxDist){ //condition implies rangefinder is generating data from objects outside the tin...
+    return true; //...therefore lid must be open
+  } else { //condition implies rangefinder values are below maxDist...
+    return false; //...therefore lid must be closed
+  }
 }
