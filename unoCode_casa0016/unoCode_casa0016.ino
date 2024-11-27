@@ -4,9 +4,14 @@
  *  Templated from CASA0016 Workshop 3
  */
 
-#define trigPin 2
-#define echoPin 3
-#define buzzerPin 4
+//map numbered pins to circuit component functions
+#define trigPin 2 //pin 2 mapped to trigger pin on rangefinder
+#define echoPin 3 //pin 3 mapped to echo pin on rangefinder
+#define buzzerPin 4 //pin 4 mapped to buzzer (voltage input)
+
+// initialise variables to global scope
+int distThreshold = 200; //distance in cm for buzzer to trigger
+int buzzerFreq = 1500; //frequency in Hertz at which buzzer sounds
 
 void setup() {
   // set baud rate to match arduino for debugging
@@ -15,9 +20,6 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
-  // initialise variables
-  int distThreshold = 200; //distance in cm for buzzer to trigger
-  int buzzerFreq = 1500 //frequency in Hertz at which buzzer sounds
 }
 
 void loop() {
