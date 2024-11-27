@@ -13,6 +13,7 @@
 int buzzerFreq = 1500; //frequency in Hertz at which buzzer sounds. chosen based on amplitude, according to buzzer documentation
 int delayTime = 500; //time in milliseconds for arduino to delay until loop() restarts
 int maxDist = 50; //the approximate length of the biscuit tube. used to determine "open" or "closed" state of lid.
+int initDist = 0;
 
 void setup() {
   // set baud rate to match arduino for debugging
@@ -22,10 +23,11 @@ void setup() {
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
 }
-
-int initDist = readcurrentDist(); //placeholder value for initial distance. properly initialised in loop()
-
+  
 void loop() {
+  while (initDist == 0){
+    initDist = readcurrentDist();
+  }
   //scan for current distance to object
   int currentDist = readcurrentDist();
   //print readings to console for debugging
