@@ -20,24 +20,19 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(buzzerPin, OUTPUT); // Sets buzzerPin as output
+  // declare initial rangefinder value
+  // int initDist = distance; //this detects current capacity of biscuits to compare with in loop
 }
 
+
 void loop() {
-  // Clears the trigPin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  long duration = pulseIn(echoPin, HIGH); 
-  float distance = 34400*duration/2000000;
+  int distance = readDistance();
   
   Serial.print("Distance in cm: ");
   Serial.println(distance);
+  // Serial.print("The initialised distance is: ");
+  // Serial.println(initDist);
+
 
   // buzzer test - triggers buzzer if distance is over 2 metres
   if (distance > distThreshold){
@@ -45,5 +40,20 @@ void loop() {
   } else {
     noTone(buzzerPin); //turn off buzzer when distance falls back below distThreshold 
   }
-  delay(500); //wait every 500milliseconds for update
+  delay(1000); //wait every 500milliseconds for update
+}
+
+int readDistance(){
+  // Clears the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  long duration = pulseIn(echoPin, HIGH); 
+  return 34400*duration/2000000; // returns the distance to object in centimeters
 }
